@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -9,10 +10,16 @@ import {
   Button,
   IconButton,
   Chip,
+  Box,
 } from "@mui/material";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import SaveIcon from "@mui/icons-material/Save";
 import tmdbApi from "../api/tmbd.js";
+import moment from "moment";
+import { useGlobalContext } from "../context/GlobalState.js";
 
 const MovieDetailsPage = () => {
+  const { state, dispatch } = useGlobalContext();
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -22,6 +29,7 @@ const MovieDetailsPage = () => {
     const fetchMovieDetails = async () => {
       try {
         const response = await tmdbApi.get(`/movie/${id}`);
+        console.log("cek response", response);
         setMovie(response.data);
         setLoading(false);
       } catch (error) {
@@ -32,14 +40,6 @@ const MovieDetailsPage = () => {
 
     fetchMovieDetails();
   }, [id]);
-
-  const handleSave = () => {
-    // Implement save functionality
-  };
-
-  const handleLike = () => {
-    // Implement like functionality
-  };
 
   if (loading) {
     return (
@@ -65,6 +65,16 @@ const MovieDetailsPage = () => {
     );
   }
 
+  const formattedDate = moment(movie.release_date).format("DD/MM/YYYY");
+
+  const handleAddToFavorites = (movie) => {
+    dispatch({ type: "ADD_TO_FAVORITES", payload: movie });
+  };
+
+  const handleAddToWatchlist = (movie) => {
+    dispatch({ type: "ADD_TO_WATCHLIST", payload: movie });
+  };
+
   return (
     <Container>
       <Grid container spacing={4}>
@@ -75,28 +85,30 @@ const MovieDetailsPage = () => {
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <div>
-            <Typography variant="subtitle1">
-              {new Date(movie.release_date).getFullYear()}
-            </Typography>
-            <Typography variant="h2">{movie.title}</Typography>
-          </div>
-          <Typography variant="body1">{movie.overview}</Typography>
-          {movie.genres && movie.genres.length > 0 && (
-            <div>
-              {movie.genres.map((genre) => (
-                <Chip key={genre.id} label={genre.name} />
-              ))}
-            </div>
-          )}
-          <div>
-            <Button variant="outlined" onClick={handleSave}>
-              Save Movie
+          <Typography variant="h2">{movie.title}</Typography>
+          <Box sx={{ display: "flex" }}>
+            <Typography variant="subtitle1">{formattedDate}</Typography>
+            {movie.genres && movie.genres.length > 0 && (
+              <div>
+                {movie.genres.map((genre) => (
+                  <Chip key={genre.id} label={genre.name} />
+                ))}
+              </div>
+            )}
+          </Box>
+          <Box>
+            <Button onClick={() => handleAddToFavorites(movie)}>
+              <FavoriteIcon sx={{ color: "#fff" }} />
             </Button>
-            <IconButton aria-label="like" onClick={handleLike}>
-              {/* Add like icon here */}
-            </IconButton>
-          </div>
+            <Button onClick={() => handleAddToWatchlist(movie)}>
+              <SaveIcon sx={{ color: "#fff" }} />
+            </Button>
+          </Box>
+          <Typography variant="body1">{movie.tagline}</Typography>
+          <Typography variant="h5">Overview</Typography>
+          <Typography variant="body1">{movie.overview}</Typography>
+
+          <div></div>
         </Grid>
       </Grid>
     </Container>
