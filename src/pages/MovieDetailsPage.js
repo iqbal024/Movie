@@ -8,7 +8,6 @@ import {
   Grid,
   Typography,
   Button,
-  IconButton,
   Chip,
   Box,
 } from "@mui/material";
@@ -17,11 +16,13 @@ import SaveIcon from "@mui/icons-material/Save";
 import tmdbApi from "../api/tmbd.js";
 import moment from "moment";
 import { useGlobalContext } from "../context/GlobalState.js";
+import MovieCard from "../components/MovieCard"; // Correct import path
 
 const MovieDetailsPage = () => {
   const { state, dispatch } = useGlobalContext();
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
+  const [recommendedMovies, setRecommendedMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -29,8 +30,11 @@ const MovieDetailsPage = () => {
     const fetchMovieDetails = async () => {
       try {
         const response = await tmdbApi.get(`/movie/${id}`);
-        console.log("cek response", response);
         setMovie(response.data);
+        const recommendationsResponse = await tmdbApi.get(
+          `/movie/${id}/recommendations`
+        );
+        setRecommendedMovies(recommendationsResponse.data.results);
         setLoading(false);
       } catch (error) {
         setError("Failed to fetch movie details. Please try again later.");
@@ -107,10 +111,17 @@ const MovieDetailsPage = () => {
           <Typography variant="body1">{movie.tagline}</Typography>
           <Typography variant="h5">Overview</Typography>
           <Typography variant="body1">{movie.overview}</Typography>
-
-          <div></div>
         </Grid>
       </Grid>
+
+      <Typography variant="h4" gutterBottom sx={{ marginTop: 4 }}>
+        Recommended Movies
+      </Typography>
+      <Box sx={{ overflowX: "scroll", display: "flex" }}>
+        {recommendedMovies.map((recommendedMovie) => (
+          <MovieCard key={recommendedMovie.id} movie={recommendedMovie} />
+        ))}
+      </Box>
     </Container>
   );
 };
