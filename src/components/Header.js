@@ -8,6 +8,7 @@ import {
   Menu,
   MenuItem,
   IconButton,
+  Box,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -50,13 +51,14 @@ const Header = () => {
     <AppBar position="static">
       <Toolbar>
         <Typography
-          variant="h6"
+          variant="h4"
           component={Link}
           to="/"
           style={{ textDecoration: "none", color: "inherit", flexGrow: 1 }}
         >
           C I N E M A
         </Typography>
+
         <IconButton
           size="large"
           edge="start"

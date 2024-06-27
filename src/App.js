@@ -7,6 +7,7 @@ import SearchBar from "./components/SearchBar";
 import FavoritesPage from "./pages/FavoritesPage";
 import WatchlistPage from "./pages/WatchlistPage";
 import Header from "./components/Header";
+import AuthCallback from "./pages/AuthCallback.js";
 import { GlobalProvider } from "./context/GlobalState";
 import theme from "./theme";
 
@@ -18,6 +19,7 @@ const App = () => (
         <Header />
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/auth-callback" component={AuthCallback} />
           <Route path="/movie/:id" element={<MovieDetailsPage />} />
           <Route path="/search" element={<SearchBar />} />
           <Route path="/favorites" element={<FavoritesPage />} />

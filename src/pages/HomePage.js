@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import {
   Container,
@@ -11,6 +10,7 @@ import {
   Alert,
   TextField,
   InputAdornment,
+  Button,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import SaveIcon from "@mui/icons-material/Save";
@@ -18,6 +18,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { Link } from "react-router-dom";
 import tmdbApi from "../api/tmbd.js";
 import { useGlobalContext } from "../context/GlobalState";
+import LoginButton from "../components/LoginButton"; // Import the login button
 
 const HomePage = () => {
   const { state, dispatch } = useGlobalContext();
@@ -72,7 +73,7 @@ const HomePage = () => {
   return (
     <Container>
       {error && <Alert severity="error">{error}</Alert>}
-
+      <LoginButton /> {/* Add the login button here */}
       <TextField
         label="Search Movies"
         variant="outlined"
@@ -89,7 +90,6 @@ const HomePage = () => {
           ),
         }}
       />
-
       {searchResults.length > 0 && (
         <>
           <Typography variant="h4" gutterBottom>
@@ -177,7 +177,6 @@ const HomePage = () => {
           </Box>
         </>
       )}
-
       <Typography variant="h4" gutterBottom>
         Now Playing
       </Typography>
@@ -254,7 +253,6 @@ const HomePage = () => {
           </Link>
         ))}
       </Box>
-
       <Typography variant="h4" gutterBottom>
         Top Rated
       </Typography>
